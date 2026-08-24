@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { Briefcase, LayoutDashboard, FileText, BriefcaseIcon, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, FileText, BriefcaseIcon, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -25,9 +25,8 @@ export function AdminLayout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <Briefcase className="w-6 h-6 text-gray-900" />
-              <span className="text-lg font-bold text-gray-900">ENTER</span>
-              <span className="text-lg text-gray-500 hidden sm:inline">Recruitment</span>
+              <span className="text-lg">📋</span>
+              <span className="text-lg font-bold text-gray-900">Requirement</span>
             </div>
 
             <nav className="hidden md:flex items-center gap-1">

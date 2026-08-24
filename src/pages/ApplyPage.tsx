@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod/v4";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Upload, X, Briefcase, Loader2, CheckCircle2 } from "lucide-react";
+import { Upload, X, Loader2, CheckCircle2 } from "lucide-react";
 import { fetchActiveJobs } from "../services/jobs";
 import { createApplication } from "../services/applications";
 import { uploadResume, deleteResume, validateResumeFile } from "../services/storage";
@@ -139,9 +139,8 @@ export function ApplyPage() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center gap-2">
-            <Briefcase className="w-6 h-6 text-gray-900" />
-            <span className="text-lg font-bold text-gray-900">ENTER</span>
-            <span className="text-lg text-gray-500">Recruitment</span>
+            <span className="text-lg">📋</span>
+            <span className="text-lg font-bold text-gray-900">Requirement</span>
           </div>
         </div>
       </div>

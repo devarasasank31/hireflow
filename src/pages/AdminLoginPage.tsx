@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Briefcase, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 
 interface LoginFormData {
@@ -59,8 +59,8 @@ export function AdminLoginPage() {
       <div className="max-w-sm w-full">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Briefcase className="w-8 h-8 text-gray-900" />
-            <span className="text-2xl font-bold text-gray-900">ENTER</span>
+            <span className="text-3xl">📋</span>
+            <span className="text-2xl font-bold text-gray-900">Requirement</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
           <p className="text-gray-600 mt-1">Sign in to manage recruitment</p>
