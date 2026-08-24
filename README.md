@@ -1,251 +1,746 @@
-# Enter Recruitment Application
+# 🚀 HireFlow
 
-A complete candidate application and hiring management system built with React, TypeScript, Tailwind CSS, and Supabase.
+### Candidate Application & Recruitment Management System
 
-## Overview
+**HireFlow** is a lightweight, full-stack recruitment management platform that streamlines the hiring workflow from **candidate application to final decision**.
 
-This application consists of two parts:
+It provides two focused experiences:
 
-1. **Public Candidate Application Page** - Where anyone can apply for open positions
-2. **Admin Hiring Management Dashboard** - Where administrators manage the recruitment pipeline
+* 👤 **Candidate Portal** — candidates can browse available positions and submit applications with resumes.
+* 🧑‍💼 **Recruiter Dashboard** — recruiters can manage jobs, review candidates, filter applications, access resumes, and move candidates through the hiring pipeline.
 
-## Features
+Built with a focus on **clean architecture, usability, security, and real-world functionality** rather than unnecessary complexity.
+
+---
+
+## 🌐 Live Demo
 
 ### Candidate Application
-- Browse and apply for open positions
-- Upload resume (PDF, DOC, DOCX - max 5MB)
-- Form validation for all fields
-- Success confirmation after submission
 
-### Admin Dashboard
-- Secure email/password authentication
-- View all candidate applications
-- Search by name, email, or phone
-- Filter by job and application stage
-- Move candidates through hiring pipeline (Applied > R1 > R2 > R3 > Approved/Reject)
-- View and download candidate resumes
-- Create, edit, and deactivate job postings
-- Responsive design for desktop and mobile
+👉 https://hireflow-npo04k7ns-dinakar-sasanks-projects.vercel.app/apply
 
-## Tech Stack
+### Recruiter / Admin Dashboard
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS
-- **Backend/Database**: Supabase (PostgreSQL, Auth, Storage)
-- **Form Handling**: React Hook Form + Zod validation
-- **Routing**: React Router v7
-- **Icons**: Lucide React
-- **Notifications**: Sonner
+👉 https://hireflow-npo04k7ns-dinakar-sasanks-projects.vercel.app/admin/login
 
-## Architecture
+### Source Code
 
-```
-src/
-  components/
-    layout/
-      AdminLayout.tsx      - Admin navigation shell
-  pages/
-    ApplyPage.tsx          - Public candidate application
-    AdminLoginPage.tsx     - Admin authentication
-    DashboardPage.tsx      - Admin metrics overview
-    ApplicationsPage.tsx   - Candidate management
-    JobsPage.tsx           - Job CRUD management
-    NotFoundPage.tsx       - 404 page
-  hooks/
-    useAuth.ts             - Authentication state management
-  lib/
-    supabase.ts            - Supabase client configuration
-    constants.ts           - Application constants
-  services/
-    jobs.ts                - Job database operations
-    applications.ts        - Application database operations
-    storage.ts             - File upload/validation
-  types/
-    index.ts               - TypeScript type definitions
-  utils/
-    format.ts              - Date, file size, stage formatting
-```
+👉 https://github.com/devarasasank31/hireflow
 
-## Database Schema
+---
 
-### jobs table
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| title | TEXT | Job title |
-| location | TEXT | Job location |
-| employment_type | TEXT | Full-time/Part-time/Internship/Contract |
-| description | TEXT | Job description |
-| is_active | BOOLEAN | Whether job is visible to candidates |
-| created_at | TIMESTAMPTZ | Creation timestamp |
-| updated_at | TIMESTAMPTZ | Last update timestamp |
+## ✨ Features
 
-### applications table
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| name | TEXT | Candidate name |
-| phone | TEXT | Phone number |
-| email | TEXT | Email address |
-| resume_path | TEXT | Storage path to resume |
-| resume_original_name | TEXT | Original filename |
-| job_id | UUID | Foreign key to jobs |
-| note | TEXT | Optional candidate note |
-| stage | TEXT | Application stage |
-| created_at | TIMESTAMPTZ | Application timestamp |
-| updated_at | TIMESTAMPTZ | Last update timestamp |
+### 👤 Candidate Portal
 
-## Supabase Setup
+Candidates can:
 
-### 1. Create Supabase Project
-1. Go to [supabase.com](https://supabase.com)
-2. Create a new project
-3. Note your Project URL and Anon Key
+* View available job opportunities
+* Select a position from the job dropdown
+* Submit their personal information
+* Upload a resume
+* Add a brief application note
+* Receive immediate submission feedback
+* Apply without creating an account
 
-### 2. Enable Authentication
-1. Go to Authentication > Providers
-2. Ensure Email/Password is enabled
+### 🧑‍💼 Recruiter Dashboard
 
-### 3. Create Admin User
-1. Go to Authentication > Users
-2. Click "Add User"
-3. Enter:
-   - Email: `admin@enter.in`
-   - Password: `Admin@12345!`
-4. Confirm the user
+Recruiters can:
 
-### 4. Run Database Migration
-1. Go to SQL Editor
-2. Paste the contents of `supabase/migrations/001_initial.sql`
-3. Run the query
+* Securely sign in
+* View all candidate applications
+* Search candidates
+* Filter candidates by job
+* Filter candidates by hiring stage
+* View candidate details
+* Open/download resumes
+* Update candidate stages
+* Manage job openings
+* Create new jobs
+* Edit existing jobs
+* Activate/deactivate job postings
+* View application counts
 
-### 5. Seed Job Data
-1. Go to SQL Editor
-2. Paste the contents of `supabase/seed.sql`
-3. Run the query
+---
 
-### 6. Create Storage Bucket
-1. Go to Storage
-2. Create a new bucket named `resumes`
-3. Make it **private** (not public)
+## 🔄 Hiring Pipeline
 
-### 7. Configure Storage Policies
-Run this SQL in the SQL Editor:
+Every new application starts at:
 
-```sql
--- Allow public uploads to resumes bucket
-CREATE POLICY "Allow public uploads"
-ON storage.objects FOR INSERT
-WITH CHECK (bucket_id = 'resumes');
-
--- Allow authenticated users to read resumes
-CREATE POLICY "Allow authenticated reads"
-ON storage.objects FOR SELECT
-USING (bucket_id = 'resumes' AND auth.role() = 'authenticated');
-
--- Allow authenticated users to delete resumes
-CREATE POLICY "Allow authenticated deletes"
-ON storage.objects FOR DELETE
-USING (bucket_id = 'resumes' AND auth.role() = 'authenticated');
+```text
+Applied
+   │
+   ├── Reject
+   │
+   └── R1
+        │
+        ├── R1 Reject
+        │
+        └── R2
+             │
+             ├── R2 Reject
+             │
+             └── R3
+                  │
+                  ├── R3 Reject
+                  │
+                  └── Approved
 ```
 
-## Environment Variables
+Supported application stages:
 
-Create a `.env.local` file:
-
+```text
+Applied
+Reject
+R1
+R1 Reject
+R2
+R2 Reject
+R3
+R3 Reject
+Approved
 ```
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+Stage changes are persisted directly to the database.
+
+---
+
+## 🏗️ Architecture
+
+```text
+                         ┌─────────────────────┐
+                         │      Candidate      │
+                         │       Browser       │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │     React + Vite    │
+                         │    Candidate UI     │
+                         └──────────┬──────────┘
+                                    │
+                                    │
+                                    ▼
+┌───────────────────────────────────────────────────────────┐
+│                         Supabase                          │
+│                                                           │
+│   ┌──────────────┐    ┌──────────────┐   ┌────────────┐ │
+│   │ PostgreSQL   │    │     Auth     │   │  Storage   │ │
+│   │              │    │              │   │            │ │
+│   │ Jobs         │    │ Admin Login  │   │ Resumes    │ │
+│   │ Applications │    │              │   │            │ │
+│   └──────────────┘    └──────────────┘   └────────────┘ │
+│                                                           │
+└────────────────────────────┬──────────────────────────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │ Recruiter Dashboard │
+                  │                     │
+                  │ Jobs                │
+                  │ Applications        │
+                  │ Filters             │
+                  │ Hiring Pipeline     │
+                  └─────────────────────┘
 ```
 
-## Local Development
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* React Router
+* React Hook Form
+* Zod
+* Lucide React
+
+### Backend / Platform
+
+* Supabase
+* PostgreSQL
+* Supabase Auth
+* Supabase Storage
+* Row Level Security (RLS)
+
+### Deployment
+
+* Vercel
+* GitHub
+
+---
+
+## 🗄️ Database Design
+
+### `jobs`
+
+| Field             | Type        | Description                                   |
+| ----------------- | ----------- | --------------------------------------------- |
+| `id`              | UUID        | Unique job identifier                         |
+| `title`           | TEXT        | Job title                                     |
+| `location`        | TEXT        | Job location                                  |
+| `employment_type` | TEXT        | Full-time / Part-time / Internship / Contract |
+| `description`     | TEXT        | Job description                               |
+| `is_active`       | BOOLEAN     | Controls public visibility                    |
+| `created_at`      | TIMESTAMPTZ | Creation timestamp                            |
+| `updated_at`      | TIMESTAMPTZ | Last update timestamp                         |
+
+### `applications`
+
+| Field                  | Type        | Description                   |
+| ---------------------- | ----------- | ----------------------------- |
+| `id`                   | UUID        | Unique application identifier |
+| `name`                 | TEXT        | Candidate name                |
+| `phone`                | TEXT        | Candidate phone               |
+| `email`                | TEXT        | Candidate email               |
+| `resume_path`          | TEXT        | Secure storage path           |
+| `resume_original_name` | TEXT        | Original resume filename      |
+| `job_id`               | UUID        | Related job                   |
+| `note`                 | TEXT        | Candidate note                |
+| `stage`                | TEXT        | Current hiring stage          |
+| `created_at`           | TIMESTAMPTZ | Application timestamp         |
+| `updated_at`           | TIMESTAMPTZ | Last update timestamp         |
+
+---
+
+## 🔐 Security
+
+HireFlow uses Supabase Row Level Security to separate candidate and recruiter access.
+
+### Public candidates
+
+Candidates can:
+
+* Read active jobs
+* Submit applications
+* Upload resumes
+
+Candidates **cannot**:
+
+* Read other applications
+* Modify applications
+* Delete applications
+* Access the admin dashboard
+
+### Authenticated recruiters
+
+Recruiters can:
+
+* View applications
+* Update application stages
+* Manage jobs
+* Access candidate resumes
+
+### Resume security
+
+Resumes are stored in a **private Supabase Storage bucket** rather than being exposed publicly.
+
+Admin access is authenticated.
+
+### Environment security
+
+Sensitive credentials are never committed to Git.
+
+Frontend environment variables use only the public Supabase client credentials.
+
+The Supabase service-role/secret key is **never exposed to the browser**.
+
+---
+
+## 📋 Validation
+
+Candidate applications validate:
+
+* Required name
+* Email format
+* Phone number
+* Job selection
+* Resume type
+* Resume size
+* Note length
+
+Supported resume formats:
+
+```text
+PDF
+DOC
+DOCX
+```
+
+Maximum resume size:
+
+```text
+5 MB
+```
+
+---
+
+## 💼 Job Management
+
+Recruiters can manage the complete job lifecycle.
+
+```text
+Create
+  ↓
+Active
+  ↓
+Edit
+  ↓
+Deactivate
+  ↓
+Archived / Inactive
+```
+
+Deactivated jobs:
+
+* Remain in the database
+* Preserve existing applications
+* Are removed from the public candidate dropdown
+
+This avoids accidentally breaking historical application records.
+
+---
+
+## 🔎 Candidate Search & Filtering
+
+Recruiters can combine:
+
+### Search
+
+Search by:
+
+* Name
+* Email
+* Phone
+
+### Job
+
+Filter by:
+
+* Any job
+* Specific job
+
+### Stage
+
+Filter by:
+
+* Applied
+* R1
+* R1 Reject
+* R2
+* R2 Reject
+* R3
+* R3 Reject
+* Reject
+* Approved
+
+Filters can be combined for more precise candidate discovery.
+
+---
+
+## 📱 Responsive Design
+
+HireFlow is designed to work across:
+
+* Desktop
+* Laptop
+* Tablet
+* Mobile
+
+The interface intentionally prioritizes:
+
+* Clear navigation
+* Readable tables
+* Simple forms
+* Responsive layouts
+* Accessible controls
+* Fast interactions
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Install:
+
+* Node.js 18+
+* npm
+* Git
+* A free Supabase account
+
+---
+
+### 1. Clone the repository
 
 ```bash
-# Install dependencies
+git clone https://github.com/devarasasank31/hireflow.git
+
+cd hireflow
+```
+
+---
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your Supabase credentials
+---
 
-# Start development server
+### 3. Create a Supabase project
+
+Create a free project at:
+
+https://supabase.com/
+
+---
+
+### 4. Run the database migration
+
+Open:
+
+```text
+supabase/migrations/001_initial.sql
+```
+
+Copy the SQL into:
+
+**Supabase → SQL Editor**
+
+Run the migration.
+
+This creates:
+
+* `jobs`
+* `applications`
+* indexes
+* constraints
+* triggers
+* Row Level Security policies
+
+---
+
+### 5. Seed the initial jobs
+
+Open:
+
+```text
+supabase/seed.sql
+```
+
+Run it once in the Supabase SQL Editor.
+
+This creates 10 initial job openings.
+
+---
+
+### 6. Create the admin account
+
+In:
+
+**Supabase → Authentication → Users**
+
+Create:
+
+```text
+Email: admin@enter.in
+Password: Admin@12345!
+```
+
+There is intentionally no public signup functionality.
+
+---
+
+### 7. Create resume storage
+
+In:
+
+**Supabase → Storage**
+
+Create a private bucket:
+
+```text
+resumes
+```
+
+Configure the required Storage policies from the project setup instructions.
+
+---
+
+### 8. Configure environment variables
+
+Create:
+
+```text
+.env.local
+```
+
+Add:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_public_key
+```
+
+Never commit `.env.local`.
+
+---
+
+### 9. Start development server
+
+```bash
 npm run dev
 ```
 
-## Build
+Open:
+
+```text
+http://localhost:5173/apply
+```
+
+Admin:
+
+```text
+http://localhost:5173/admin/login
+```
+
+---
+
+## 🧪 Production Build
+
+Verify the production build locally:
 
 ```bash
 npm run build
 ```
 
-## Deployment
+The project should compile successfully before deployment.
 
-### Vercel (Recommended)
+---
 
-1. Push code to GitHub
-2. Go to [vercel.com](https://vercel.com)
-3. Import the GitHub repository
-4. Add environment variables:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-5. Deploy
+## ☁️ Deployment
 
-### SPA Routing
+HireFlow is deployed using:
 
-The `vercel.json` file handles SPA routing for direct URL access.
+```text
+GitHub
+   ↓
+Vercel
+   ↓
+Production
+```
 
-## URLs
+Supabase provides:
 
-- **Candidate Application**: `https://your-domain/apply`
-- **Admin Login**: `https://your-domain/admin/login`
-- **Admin Dashboard**: `https://your-domain/admin/dashboard`
+```text
+Database
+Authentication
+Storage
+```
 
-## Admin Credentials
+Vercel provides the frontend hosting.
 
-- **Email**: admin@enter.in
-- **Password**: Admin@12345!
+### Vercel Environment Variables
 
-## Hiring Stages
+Add:
 
-- Applied (default for new applications)
-- R1 (Round 1)
-- R1 Reject
-- R2 (Round 2)
-- R2 Reject
-- R3 (Round 3)
-- R3 Reject
-- Reject
-- Approved
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+```
 
-## Testing Checklist
+Then deploy:
 
-1. Open `/apply` - verify page loads
-2. Verify 10 seed jobs appear in dropdown
-3. Fill out application form
-4. Upload a PDF resume
-5. Submit application
-6. Verify success message
-7. Login at `/admin/login`
-8. Verify dashboard shows metrics
-9. Navigate to Applications
-10. Verify application appears
-11. Test search functionality
-12. Test job filter
-13. Test stage filter
-14. Change application stage
-15. View candidate details modal
-16. View/download resume
-17. Navigate to Jobs
-18. Create a new job
-19. Edit an existing job
-20. Deactivate a job
-21. Verify deactivated job removed from candidate dropdown
-22. Test logout
-23. Verify admin routes are protected
-24. Test mobile responsive layout
+```bash
+git push origin main
+```
 
-## Assumptions
+Vercel automatically builds and deploys the latest commit.
 
-- The assignment requested a temporary admin login - this is implemented as specified
-- 10 realistic job seed data is provided as required
-- No AI features are included as the requirements don't mandate them
-- The application is designed for free deployment on Vercel + Supabase free tier
+---
+
+## 🔑 Demo Credentials
+
+### Admin
+
+```text
+Email:
+admin@enter.in
+
+Password:
+Admin@12345!
+```
+
+> These credentials are intended only for the temporary assignment/demo environment.
+
+---
+
+## 📊 Application Flow
+
+```text
+Candidate
+   │
+   ▼
+Browse Jobs
+   │
+   ▼
+Select Position
+   │
+   ▼
+Fill Application
+   │
+   ▼
+Upload Resume
+   │
+   ▼
+Submit
+   │
+   ▼
+Application Created
+   │
+   ▼
+Applied
+   │
+   ▼
+Recruiter Review
+   │
+   ├──── Reject
+   │
+   └──── R1
+          │
+          ├──── R1 Reject
+          │
+          └──── R2
+                 │
+                 ├──── R2 Reject
+                 │
+                 └──── R3
+                        │
+                        ├──── R3 Reject
+                        │
+                        └──── Approved
+```
+
+---
+
+## 🎯 Design Principles
+
+HireFlow was built around a few principles:
+
+### 1. Simple over complex
+
+The system focuses on the actual recruitment workflow rather than unnecessary features.
+
+### 2. Functional over flashy
+
+Every major UI element maps to a real operation.
+
+### 3. Secure by default
+
+Candidate data and resumes are protected through authentication, authorization, and RLS.
+
+### 4. Fast development
+
+The architecture uses managed infrastructure to reduce unnecessary backend complexity.
+
+### 5. Production-minded
+
+The application includes:
+
+* Validation
+* Error handling
+* Loading states
+* Protected routes
+* Database constraints
+* Storage security
+* Responsive UI
+* Production deployment
+
+---
+
+## 📁 Project Structure
+
+```text
+hireflow/
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   ├── hooks/
+│   ├── lib/
+│   ├── pages/
+│   ├── services/
+│   ├── types/
+│   ├── utils/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+│
+├── supabase/
+│   ├── migrations/
+│   │   └── 001_initial.sql
+│   └── seed.sql
+│
+├── .env.example
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── README.md
+├── tsconfig.json
+├── vite.config.ts
+└── ...
+```
+
+---
+
+## 🔗 Links
+
+**Live Candidate Portal**
+https://hireflow-npo04k7ns-dinakar-sasanks-projects.vercel.app/apply
+
+**Live Admin Portal**
+https://hireflow-npo04k7ns-dinakar-sasanks-projects.vercel.app/admin/login
+
+**GitHub Repository**
+https://github.com/devarasasank31/hireflow
+
+---
+
+## 📝 Assignment Context
+
+HireFlow was developed as a full-stack recruitment management solution for an AI Fullstack Intern technical assignment.
+
+The implementation focuses on the requested requirements:
+
+* Public job application
+* Resume upload
+* Admin authentication
+* Job management
+* Candidate management
+* Job filtering
+* Stage filtering
+* Hiring pipeline
+* Online deployment
+
+The solution intentionally keeps the architecture lightweight while maintaining a production-oriented approach to data access and security.
+
+---
+
+## 👨‍💻 Author
+
+**Shashank Devarasetty**
+
+Full-Stack Developer | Java | Spring Boot | React | Node.js | AI Applications
+
+---
+
+## ⭐ If you found this project interesting
+
+Feel free to explore the codebase, try the live application, or connect with me on GitHub.
