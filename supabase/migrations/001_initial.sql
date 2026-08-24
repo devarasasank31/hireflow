@@ -93,9 +93,6 @@ CREATE POLICY "Public can create applications"
   ON applications FOR INSERT
   WITH CHECK (true);
 
--- Public cannot read, update, or delete applications
--- (no SELECT, UPDATE, DELETE policies for anon)
-
 -- Authenticated admin can read all applications
 CREATE POLICY "Admin can view applications"
   ON applications FOR SELECT
@@ -111,3 +108,29 @@ CREATE POLICY "Admin can update applications"
 CREATE POLICY "Admin can delete applications"
   ON applications FOR DELETE
   USING (auth.role() = 'authenticated');
+
+-- =============================================
+-- STORAGE
+-- =============================================
+-- Create the resumes bucket (private, no public access)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('resumes', 'resumes', false)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow anyone to upload resumes (needed for candidate submission)
+CREATE POLICY "Anyone can upload resumes"
+  ON storage.objects FOR INSERT
+  TO anon
+  WITH CHECK (bucket_id = 'resumes');
+
+-- Allow authenticated admin to read resumes
+CREATE POLICY "Admin can read resumes"
+  ON storage.objects FOR SELECT
+  TO authenticated
+  USING (bucket_id = 'resumes');
+
+-- Allow authenticated admin to delete resumes
+CREATE POLICY "Admin can delete resumes"
+  ON storage.objects FOR DELETE
+  TO authenticated
+  USING (bucket_id = 'resumes');

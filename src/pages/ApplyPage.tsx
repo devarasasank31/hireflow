@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Upload, X, Briefcase, Loader2, CheckCircle2 } from "lucide-react";
 import { fetchActiveJobs } from "../services/jobs";
 import { createApplication } from "../services/applications";
-import { uploadResume, validateResumeFile } from "../services/storage";
+import { uploadResume, deleteResume, validateResumeFile } from "../services/storage";
 import { formatFileSize } from "../utils/format";
 import type { Job } from "../types";
 
@@ -87,7 +87,6 @@ export function ApplyPage() {
         });
       } catch (dbError) {
         try {
-          const { deleteResume } = await import("../services/storage");
           await deleteResume(resumePath);
         } catch {
           // Cleanup failed, but we still need to show error
