@@ -9,8 +9,8 @@ export async function createApplication(app: {
   resume_original_name: string;
   job_id: string;
   note?: string;
-}): Promise<Application> {
-  const { data, error } = await supabase
+}): Promise<void> {
+  const { error } = await supabase
     .from("applications")
     .insert({
       name: app.name,
@@ -21,12 +21,9 @@ export async function createApplication(app: {
       job_id: app.job_id,
       note: app.note || null,
       stage: "Applied",
-    })
-    .select()
-    .single();
+    });
 
   if (error) throw error;
-  return data;
 }
 
 export async function fetchApplications(): Promise<Application[]> {
